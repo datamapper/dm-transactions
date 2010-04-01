@@ -1,8 +1,9 @@
 require 'dm-transactions'
 
-require 'dm-core/spec/lib/counter_adapter'
+require 'dm-core/spec/lib/spec_helper'
 require 'dm-core/spec/lib/pending_helpers'
 require 'dm-core/spec/lib/adapter_helpers'
+require 'dm-core/spec/lib/counter_adapter'
 
 require 'dm-core/spec/resource_shared_spec'
 require 'dm-core/spec/sel_shared_spec'
@@ -21,6 +22,12 @@ adapters  = DataMapper::Spec::AdapterHelpers.primary_adapters.keys if adapters.i
 DataMapper::Spec::AdapterHelpers.setup_adapters(adapters)
 
 Spec::Runner.configure do |config|
+
   config.extend(DataMapper::Spec::AdapterHelpers)
   config.include(DataMapper::Spec::PendingHelpers)
+
+  config.after :all do
+    DataMapper::Spec.cleanup_models
+  end
+
 end
