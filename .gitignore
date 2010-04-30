@@ -21,5 +21,7 @@ pkg
 
 ## PROJECT::SPECIFIC
 .bundle
+Gemfile.local
 spec/db
+spec/log
 
