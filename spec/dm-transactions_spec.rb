@@ -67,6 +67,20 @@ describe DataMapper::Resource, 'Transactions' do
     @paragraph_model = Blog::Paragraph
   end
 
+  describe "require 'dm-transactions" do
+
+    it 'should not perform adapter setup' do
+      lambda { DataMapper.repository.adapter }.should raise_error(DataMapper::RepositoryNotSetupError)
+    end
+
+    %w[Repository Model Resource].each do |name|
+      it "should make #transaction available on DataMapper::#{name}" do
+        DataMapper.const_get(name).instance_methods.include?('transaction').should be_true
+      end
+    end
+
+  end
+
   supported_by :postgres, :mysql, :sqlite, :oracle, :sqlserver do
     before :all do
       user = @user_model.create(:name => 'dbussink', :age => 25, :description => 'Test')

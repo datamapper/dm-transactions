@@ -344,13 +344,6 @@ module DataMapper
     module Adapter
       extend Chainable
 
-      # @api private
-      def self.included(base)
-        [ :Repository, :Model, :Resource ].each do |name|
-          DataMapper.const_get(name).send(:include, Transaction.const_get(name))
-        end
-      end
-
       # Produces a fresh transaction primitive for this Adapter
       #
       # Used by Transaction to perform its various tasks.
@@ -487,6 +480,11 @@ module DataMapper
         model.transaction { |*block_args| yield(*block_args) }
       end
     end # module Resource
+
+    [ :Repository, :Model, :Resource ].each do |name|
+      DataMapper.const_get(name).send(:include, Transaction.const_get(name))
+    end
+
   end # class Transaction
 
   module Adapters
