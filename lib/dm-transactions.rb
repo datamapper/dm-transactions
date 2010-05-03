@@ -507,7 +507,7 @@ module DataMapper
 
     def self.include_transaction_api(const_name)
       adapter = const_get(const_name)
-      if adapter.supports_transactions? && Transaction.supported_adapter?(adapter_name(const_name))
+      if Transaction.supported_adapter?(adapter_name(const_name))
         adapter.send(:include, transaction_module(const_name))
       end
     end
