@@ -4,6 +4,14 @@ module DataMapper
   class Transaction
     extend Chainable
 
+    def self.supported_adapters
+      @supported_adapters ||= []
+    end
+
+    def self.supported_adapter?(name)
+      supported_adapters.include?(name.to_sym)
+    end
+
     # @api private
     attr_accessor :state
 
@@ -431,8 +439,11 @@ module DataMapper
       end
     end # module Adapter
 
-    # alias the MySQL, PostgreSQL, Sqlite3 and Oracle adapters to use transactions
-    MysqlAdapter = PostgresAdapter = SqliteAdapter = OracleAdapter = SqlserverAdapter = Adapter
+    supported_adapters << :sqlite
+    supported_adapters << :mysql
+    supported_adapters << :postgres
+    supported_adapters << :oracle
+    supported_adapters << :sqlserver
 
     module Repository
 
@@ -481,24 +492,40 @@ module DataMapper
       end
     end # module Resource
 
-    [ :Repository, :Model, :Resource ].each do |name|
-      DataMapper.const_get(name).send(:include, Transaction.const_get(name))
+    def self.include_transaction_api
+      [ :Repository, :Model, :Resource ].each do |name|
+        DataMapper.const_get(name).send(:include, Transaction.const_get(name))
+      end
+      DataMapper::Repository.adapters.values.each do |adapter|
+        Adapters.include_transaction_api(ActiveSupport::Inflector.demodulize(adapter.class.name))
+      end
     end
 
   end # class Transaction
 
   module Adapters
-    extendable do
 
+    def self.include_transaction_api(const_name)
+      adapter = const_get(const_name)
+      if adapter.supports_transactions? && Transaction.supported_adapter?(adapter_name(const_name))
+        adapter.send(:include, transaction_module(const_name))
+      end
+    end
+
+    def self.transaction_module(const_name)
+      Transaction::Adapter
+    end
+
+    extendable do
       # @api private
       def const_added(const_name)
-        if Transaction.const_defined?(const_name)
-          adapter = const_get(const_name)
-          adapter.send(:include, Transaction.const_get(const_name))
-        end
-
+        include_transaction_api(const_name)
         super
       end
     end
+
   end # module Adapters
+
+  Transaction.include_transaction_api
+
 end # module DataMapper

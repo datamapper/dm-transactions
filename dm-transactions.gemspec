@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dirkjan Bussink (dbussink)", "Dan Kubb (dkubb)"]
-  s.date = %q{2010-04-30}
+  s.date = %q{2010-05-03}
   s.description = %q{Makes transaction support available for adapters that support them}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
@@ -26,7 +26,10 @@ Gem::Specification.new do |s|
      "VERSION",
      "dm-transactions.gemspec",
      "lib/dm-transactions.rb",
-     "spec/dm-transactions_spec.rb",
+     "spec/isolated/require_after_setup_spec.rb",
+     "spec/isolated/require_before_setup_spec.rb",
+     "spec/isolated/require_spec.rb",
+     "spec/public/dm-transactions_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
      "spec/spec_helper.rb",
@@ -43,7 +46,10 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{Adds transaction support to datamapper}
   s.test_files = [
-    "spec/dm-transactions_spec.rb",
+    "spec/isolated/require_after_setup_spec.rb",
+     "spec/isolated/require_before_setup_spec.rb",
+     "spec/isolated/require_spec.rb",
+     "spec/public/dm-transactions_spec.rb",
      "spec/spec_helper.rb"
   ]
 
