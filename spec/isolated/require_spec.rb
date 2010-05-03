@@ -7,7 +7,9 @@ shared_examples_for "require 'dm-transactions'" do
   end
 
   it "should include the transaction api into the adapter" do
-    @adapter.respond_to?(:transaction_primitive).should be_true
+    @adapter.respond_to?(:push_transaction   ).should be_true
+    @adapter.respond_to?(:pop_transaction    ).should be_true
+    @adapter.respond_to?(:current_transaction).should be_true
   end
 
 end
