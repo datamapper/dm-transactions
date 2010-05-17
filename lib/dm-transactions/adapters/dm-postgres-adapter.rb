@@ -6,6 +6,6 @@ module DataMapper
     module PostgresAdapter
       include DataObjectsAdapter
     end
-    
+
   end
 end

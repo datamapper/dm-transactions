@@ -6,6 +6,6 @@ module DataMapper
     module SqliteAdapter
       include DataObjectsAdapter
     end
-    
+
   end
 end

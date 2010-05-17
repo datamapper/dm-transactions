@@ -6,6 +6,6 @@ module DataMapper
     module SqlserverAdapter
       include DataObjectsAdapter
     end
-    
+
   end
 end

@@ -6,6 +6,6 @@ module DataMapper
     module MysqlAdapter
       include DataObjectsAdapter
     end
-    
+
   end
 end

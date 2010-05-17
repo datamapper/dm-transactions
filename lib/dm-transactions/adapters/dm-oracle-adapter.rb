@@ -6,6 +6,6 @@ module DataMapper
     module OracleAdapter
       include DataObjectsAdapter
     end
-    
+
   end
 end
