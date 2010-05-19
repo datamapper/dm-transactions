@@ -409,6 +409,9 @@ module DataMapper
         if DataMapper::Transaction.const_defined?(const_name)
           adapter.send(:include, transaction_module(const_name))
         end
+      rescue LoadError
+        # Silently ignore the fact that no adapter extensions could be required
+        # This means that the adapter in use doesn't support transactions
       end
 
       def transaction_module(const_name)
