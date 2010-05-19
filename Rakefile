@@ -13,7 +13,7 @@ begin
     gem.homepage    = "http://github.com/datamapper/dm-transactions"
     gem.authors     = ["Dirkjan Bussink (dbussink)", "Dan Kubb (dkubb)"]
 
-    gem.add_dependency 'dm-core', '~> 1.0.0.rc1'
+    gem.add_dependency 'dm-core', '~> 1.0.0.rc2'
 
     gem.add_development_dependency 'rspec',   '~> 1.3'
 
