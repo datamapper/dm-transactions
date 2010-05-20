@@ -1,7 +1,6 @@
 require 'spec'
 require 'isolated/require_spec'
 require 'dm-core/spec/setup'
-require 'dm-core/spec/lib/adapter_helpers'
 
 # To really test this behavior, this spec needs to be run in isolation and not
 # as part of the typical rake spec run, which requires dm-transactions upfront
@@ -9,7 +8,6 @@ require 'dm-core/spec/lib/adapter_helpers'
 if %w[postgres mysql sqlite oracle sqlserver].include?(ENV['ADAPTER'])
 
   describe "require 'dm-transactions after calling DataMapper.setup" do
-    extend DataMapper::Spec::Adapters::Helpers
 
     before(:all) do
       @adapter = DataMapper::Spec.adapter
