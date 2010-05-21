@@ -134,8 +134,8 @@ describe DataMapper::Resource, 'Transactions' do
         @txn = nil
 
         def doit
-          @user_model.transaction do
-            @txn = Thread.current[:dm_transactions].last
+          @user_model.transaction do |transaction|
+            @txn = transaction
             return
           end
         end
