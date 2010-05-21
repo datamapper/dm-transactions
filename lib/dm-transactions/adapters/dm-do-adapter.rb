@@ -75,7 +75,8 @@ module DataMapper
 
       # @api private
       def transactions
-        Thread.current[:dm_transactions] ||= []
+        Thread.current[:dm_transactions]            ||= {}
+        Thread.current[:dm_transactions][object_id] ||= []
       end
 
       # Retrieve the current connection for this Adapter.

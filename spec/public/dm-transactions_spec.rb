@@ -93,8 +93,16 @@ describe DataMapper::Resource, 'Transactions' do
     it_should_behave_like 'A Resource supporting Strategic Eager Loading'
   end
 
-  supported_by :postgres, :mysql, :sqlite3, :oracle, :sqlserver do
-    describe '#transaction' do
+  describe '#transaction' do
+    before :all do
+      class ::Author
+        include DataMapper::Resource
+
+        property :name, String, :key => true
+      end
+    end
+
+    supported_by :postgres, :mysql, :sqlite, :oracle, :sqlserver do
       before do
         @user_model.all.destroy!
       end
@@ -147,6 +155,33 @@ describe DataMapper::Resource, 'Transactions' do
 
       it 'should return the last statement in the transaction block' do
         @user_model.transaction { 1 }.should == 1
+      end
+
+      with_alternate_adapter do
+        before :all do
+          class ::Article
+            include DataMapper::Resource
+
+            def self.default_repository_name
+              :alternate
+            end
+
+            property :title, String, :key => true
+          end
+
+          DataMapper.auto_migrate!(:alternate)
+        end
+
+        it 'should work with other repositories' do
+          expect {
+            DataMapper.repository.transaction.commit do
+              Author.create(:name => 'Dan Kubb')
+
+              # save a resource to another repository
+              Article.create(:title => 'DataMapper Rocks!')
+            end
+          }.should_not raise_error
+        end
       end
     end
   end
