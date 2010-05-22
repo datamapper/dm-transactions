@@ -392,8 +392,8 @@ module DataMapper
       [ :Repository, :Model, :Resource ].each do |name|
         DataMapper.const_get(name).send(:include, Transaction.const_get(name))
       end
-      DataMapper::Repository.adapters.values.each do |adapter|
-        Adapters.include_transaction_api(ActiveSupport::Inflector.demodulize(adapter.class.name))
+      DataMapper::Adapters::AbstractAdapter.descendants.each do |adapter_class|
+        Adapters.include_transaction_api(ActiveSupport::Inflector.demodulize(adapter_class.name))
       end
     end
 
