@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dirkjan Bussink (dbussink)", "Dan Kubb (dkubb)"]
-  s.date = %q{2010-05-19}
+  s.date = %q{2010-05-23}
   s.description = %q{Makes transaction support available for adapters that support them}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/datamapper/dm-transactions}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{datamapper}
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Adds transaction support to datamapper}
   s.test_files = [
