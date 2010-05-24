@@ -390,9 +390,9 @@ module DataMapper
 
     def self.include_transaction_api
       [ :Repository, :Model, :Resource ].each do |name|
-        DataMapper.const_get(name).send(:include, Transaction.const_get(name))
+        DataMapper.const_get(name).send(:include, const_get(name))
       end
-      DataMapper::Adapters::AbstractAdapter.descendants.each do |adapter_class|
+      Adapters::AbstractAdapter.descendants.each do |adapter_class|
         Adapters.include_transaction_api(ActiveSupport::Inflector.demodulize(adapter_class.name))
       end
     end
@@ -403,7 +403,7 @@ module DataMapper
 
     def self.include_transaction_api(const_name)
       require transaction_extensions(const_name)
-      if DataMapper::Transaction.const_defined?(const_name)
+      if Transaction.const_defined?(const_name)
         adapter = const_get(const_name)
         adapter.send(:include, transaction_module(const_name))
       end
@@ -413,7 +413,7 @@ module DataMapper
     end
 
     def self.transaction_module(const_name)
-      DataMapper::Transaction.const_get(const_name)
+      Transaction.const_get(const_name)
     end
 
     class << self
