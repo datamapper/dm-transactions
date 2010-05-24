@@ -401,23 +401,22 @@ module DataMapper
 
   module Adapters
 
-    class << self
-
-      def include_transaction_api(const_name)
-        require transaction_extensions(const_name)
+    def self.include_transaction_api(const_name)
+      require transaction_extensions(const_name)
+      if DataMapper::Transaction.const_defined?(const_name)
         adapter = const_get(const_name)
-        if DataMapper::Transaction.const_defined?(const_name)
-          adapter.send(:include, transaction_module(const_name))
-        end
-      rescue LoadError
-        # Silently ignore the fact that no adapter extensions could be required
-        # This means that the adapter in use doesn't support transactions
+        adapter.send(:include, transaction_module(const_name))
       end
+    rescue LoadError
+      # Silently ignore the fact that no adapter extensions could be required
+      # This means that the adapter in use doesn't support transactions
+    end
 
-      def transaction_module(const_name)
-        DataMapper::Transaction.const_get(const_name)
-      end
+    def self.transaction_module(const_name)
+      DataMapper::Transaction.const_get(const_name)
+    end
 
+    class << self
     private
 
       # @api private
