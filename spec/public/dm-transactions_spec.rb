@@ -104,7 +104,7 @@ describe DataMapper::Resource, 'Transactions' do
 
     supported_by :postgres, :mysql, :sqlite, :oracle, :sqlserver do
       before do
-        @user_model.all.destroy!
+        @user_model.destroy!
       end
 
       it 'should have access to resources presisted before the transaction' do
