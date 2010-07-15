@@ -393,7 +393,7 @@ module DataMapper
         DataMapper.const_get(name).send(:include, const_get(name))
       end
       Adapters::AbstractAdapter.descendants.each do |adapter_class|
-        Adapters.include_transaction_api(ActiveSupport::Inflector.demodulize(adapter_class.name))
+        Adapters.include_transaction_api(DataMapper::Inflector.demodulize(adapter_class.name))
       end
     end
 
