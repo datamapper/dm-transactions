@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dirkjan Bussink (dbussink)", "Dan Kubb (dkubb)"]
-  s.date = %q{2010-06-08}
+  s.date = %q{2010-08-29}
   s.description = %q{Makes transaction support available for adapters that support them}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
