@@ -72,7 +72,7 @@ source 'http://rubygems.org'
 
 DATAMAPPER = 'git://github.com/datamapper'
 DM_VERSION = '~> 1.0.0'
-DO_VERSION = '~> 0.10.3'
+DO_VERSION = '~> 0.10.2'
 
 group :runtime do # Runtime dependencies (as in the gemspec)
 
@@ -108,18 +108,21 @@ end
 group :datamapper do # We need this because we want to pin these dependencies to their git master sources
 
   adapters = ENV['ADAPTER'] || ENV['ADAPTERS']
-  adapters = adapters.to_s.gsub(',',' ').split(' ') - ['in_memory']
+  adapters = adapters.to_s.tr(',', ' ').split.uniq - %w[ in_memory ]
 
   unless adapters.empty?
 
-    DM_DO_ADAPTERS = %w[sqlite postgres mysql oracle sqlserver]
+    DM_DO_ADAPTERS = %w[ sqlite postgres mysql oracle sqlserver ]
 
-    gem 'data_objects',  DO_VERSION, :git => "#{DATAMAPPER}/do.git"
+    do_options = {}
+    do_options[:git] = "#{DATAMAPPER}/do.git" if ENV['DO_GIT'] == 'true'
+
+    gem 'data_objects',  DO_VERSION, do_options.dup
 
     adapters.each do |adapter|
-      if DM_DO_ADAPTERS.any? { |dm_do_adapter| dm_do_adapter =~ /#{adapter}/  }
+      if DM_DO_ADAPTERS.any? { |dm_do_adapter| dm_do_adapter.include?(adapter) }
         adapter = 'sqlite3' if adapter == 'sqlite'
-        gem "do_#{adapter}", DO_VERSION, :git => "#{DATAMAPPER}/do.git"
+        gem "do_#{adapter}", DO_VERSION, do_options.dup
       end
     end
 
