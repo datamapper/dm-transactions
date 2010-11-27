@@ -128,14 +128,14 @@ describe DataMapper::Resource, 'Transactions' do
       end
 
       it 'should rollback when an error is thrown in a transaction' do
-        @user_model.all.should have(0).entries
+        @user_model.all.size.should == 0
         lambda {
           @user_model.transaction do
             @user_model.create(:name => 'carllerche')
             raise 'I love coffee'
           end
         }.should raise_error('I love coffee')
-        @user_model.all.should have(0).entries
+        @user_model.all.size.should == 0
       end
 
       it 'should close the transaction if return is called within the closure' do
