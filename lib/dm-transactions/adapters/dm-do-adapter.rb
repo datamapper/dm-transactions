@@ -14,7 +14,11 @@ module DataMapper
       #
       # @api private
       def transaction_primitive
-        DataObjects::Transaction.create_for_uri(normalized_uri)
+        if current_transaction && supports_savepoints?
+          DataObjects::SavePoint.create_for_uri(normalized_uri, current_connection)
+        else
+          DataObjects::Transaction.create_for_uri(normalized_uri)
+        end
       end
 
       # Pushes the given Transaction onto the per thread Transaction stack so
@@ -89,6 +93,17 @@ module DataMapper
         if transaction = current_transaction
           transaction.primitive_for(self).connection
         end
+      end
+
+      # Indicate whether adapter supports transactional savepoints.  Not all DO
+      # adapters do, so default to false.
+      #
+      # @return [Boolean]
+      #   whether or not the adapter supports savepoints
+      #
+      # @api private
+      def supports_savepoints?
+        false
       end
 
     end # module DataObjectsAdapter

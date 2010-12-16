@@ -5,6 +5,10 @@ module DataMapper
 
     module MysqlAdapter
       include DataObjectsAdapter
+
+      def supports_savepoints?
+        true
+      end
     end
 
   end

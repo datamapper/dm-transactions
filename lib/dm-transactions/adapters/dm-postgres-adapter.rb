@@ -5,6 +5,10 @@ module DataMapper
 
     module PostgresAdapter
       include DataObjectsAdapter
+
+      def supports_savepoints?
+        true
+      end
     end
 
   end
