@@ -102,6 +102,40 @@ describe DataMapper::Resource, 'Transactions' do
       end
     end
 
+    supported_by :postgres, :mysql do
+      before do
+          @user_model.destroy!
+      end
+
+      it 'should support nested transactions' do
+        # can't assume dm-aggregates
+        begin
+          @user_model.all.length.should == 0
+
+          @user_model.transaction do # txn 1
+            @user_model.create(:name => 'jpr5')
+
+            @user_model.all.length.should == 1
+
+            begin
+              @user_model.transaction do # savepoint 1
+                @user_model.create(:name => 'dkubb')
+                @user_model.all.length.should == 2
+
+                raise
+              end
+            rescue => e
+              @user_model.all.length.should == 1
+            end
+
+            raise
+          end
+        rescue => e
+          @user_model.all.length.should == 0
+        end
+      end
+    end
+
     supported_by :postgres, :mysql, :sqlite, :oracle, :sqlserver do
       before do
         @user_model.destroy!
@@ -127,7 +161,7 @@ describe DataMapper::Resource, 'Transactions' do
         end
       end
 
-      it 'should rollback when an error is thrown in a transaction' do
+      it 'should rollback when an error is raised in a transaction' do
         @user_model.all.size.should == 0
         lambda {
           @user_model.transaction do
