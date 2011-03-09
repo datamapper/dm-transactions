@@ -104,7 +104,7 @@ describe DataMapper::Resource, 'Transactions' do
 
     supported_by :postgres, :mysql do
       before do
-          @user_model.destroy!
+        @user_model.destroy!
       end
 
       it 'should support nested transactions' do
