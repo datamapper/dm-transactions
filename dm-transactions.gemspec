@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dm-transactions}
-  s.version = "1.1.0"
+  s.version = "1.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dirkjan Bussink (dbussink)", "Dan Kubb (dkubb)"]
-  s.date = %q{2011-03-16}
+  s.date = %q{2011-04-28}
   s.description = %q{Makes transaction support available for adapters that support them}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
