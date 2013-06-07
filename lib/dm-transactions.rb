@@ -134,13 +134,11 @@ module DataMapper
             rollback
           end
           raise exception
-        ensure
-          unless exception
-            if begin?
-              commit
-            end
-            return rval
+        else
+          if begin?
+            commit
           end
+          return rval
         end
       else
         unless begin?
@@ -218,29 +216,16 @@ module DataMapper
 
     # @api private
     def primitive_for(adapter)
-      unless @adapters.include?(adapter)
+      unless @adapters.key?(adapter)
         raise "Unknown adapter #{adapter}"
       end
 
-      unless @transaction_primitives.include?(adapter)
+      @transaction_primitives.fetch(adapter) do
         raise "No primitive for #{adapter}"
       end
-
-      @transaction_primitives[adapter]
     end
 
     private
-
-    # @api private
-    def validate_primitive(primitive)
-      [:close, :begin, :rollback, :commit].each do |meth|
-        unless primitive.respond_to?(meth)
-          raise "Invalid primitive #{primitive}: doesnt respond_to?(#{meth.inspect})"
-        end
-      end
-
-      primitive
-    end
 
     # @api private
     def each_adapter(method, on_fail)
@@ -265,7 +250,7 @@ module DataMapper
 
     # @api private
     def state_for(adapter)
-      unless @adapters.include?(adapter)
+      unless @adapters.key?(adapter)
         raise "Unknown adapter #{adapter}"
       end
 
@@ -274,18 +259,15 @@ module DataMapper
 
     # @api private
     def do_adapter(adapter, what, prerequisite)
-      unless @transaction_primitives.include?(adapter)
-        raise "No primitive for #{adapter}"
-      end
-
-      state = state_for(adapter)
+      primitive = primitive_for(adapter)
+      state     = state_for(adapter)
 
       unless state == prerequisite
         raise "Illegal state for #{what}: #{state}"
       end
 
       DataMapper.logger.debug("#{adapter.name}: #{what}")
-      @transaction_primitives[adapter].send(what)
+      primitive.send(what)
       @adapters[adapter] = what
     end
 
@@ -300,23 +282,20 @@ module DataMapper
         raise "Already a primitive for adapter #{adapter}"
       end
 
-      @transaction_primitives[adapter] = validate_primitive(adapter.transaction_primitive)
+      @transaction_primitives[adapter] = adapter.transaction_primitive
     end
 
     # @api private
     def close_adapter_if_open(adapter)
-      if @transaction_primitives.include?(adapter)
+      if @transaction_primitives.key?(adapter)
         close_adapter(adapter)
       end
     end
 
     # @api private
     def close_adapter(adapter)
-      unless @transaction_primitives.include?(adapter)
-        raise 'No primitive for adapter'
-      end
-
-      @transaction_primitives[adapter].close
+      primitive = primitive_for(adapter)
+      primitive.close
       @transaction_primitives.delete(adapter)
     end
 
