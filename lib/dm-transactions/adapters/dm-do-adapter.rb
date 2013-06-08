@@ -4,6 +4,42 @@ module DataMapper
     module DataObjectsAdapter
       extend Chainable
 
+      # Begin the transaction
+      #
+      # @param [DataObject::Transaction] transaction
+      #
+      # @return [self]
+      #
+      # @api private
+      def begin(transaction)
+        transaction.begin
+        self
+      end
+
+      # Commit the transaction
+      #
+      # @param [DataObject::Transaction] transaction
+      #
+      # @return [self]
+      #
+      # @api private
+      def commit(transaction)
+        transaction.commit
+        self
+      end
+
+      # Rollback the transaction
+      #
+      # @param [DataObject::Transaction] transaction
+      #
+      # @return [self]
+      #
+      # @api private
+      def rollback(transaction)
+        transaction.rollback
+        self
+      end
+
       # Produces a fresh transaction primitive for this Adapter
       #
       # Used by Transaction to perform its various tasks.

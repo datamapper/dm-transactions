@@ -267,7 +267,7 @@ module DataMapper
       end
 
       DataMapper.logger.debug("#{adapter.name}: #{command}")
-      primitive.send(command)
+      adapter.public_send(command, primitive)
       @adapters[adapter] = command
     end
 
