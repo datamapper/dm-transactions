@@ -258,17 +258,17 @@ module DataMapper
     end
 
     # @api private
-    def do_adapter(adapter, what, prerequisite)
+    def do_adapter(adapter, command, prerequisite)
       primitive = primitive_for(adapter)
       state     = state_for(adapter)
 
       unless state == prerequisite
-        raise "Illegal state for #{what}: #{state}"
+        raise "Illegal state for #{command}: #{state}"
       end
 
-      DataMapper.logger.debug("#{adapter.name}: #{what}")
-      primitive.send(what)
-      @adapters[adapter] = what
+      DataMapper.logger.debug("#{adapter.name}: #{command}")
+      primitive.send(command)
+      @adapters[adapter] = command
     end
 
     # @api private
