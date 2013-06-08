@@ -22,7 +22,3 @@ notifications:
   irc: "irc.freenode.org#datamapper"
   email:
     - dan.kubb@gmail.com
-matrix:
-  allow_failures:
-    - rvm: rbx-18mode
-    - rvm: rbx-19mode
