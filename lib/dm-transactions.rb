@@ -184,17 +184,12 @@ module DataMapper
       end
 
       adapters = @adapters
-
-      adapters.each_key do |adapter|
-        adapter.push_transaction(self)
-      end
+      adapters.each_key { |adapter| adapter.push_transaction(self) }
 
       begin
         yield self
       ensure
-        adapters.each_key do |adapter|
-          adapter.pop_transaction
-        end
+        adapters.each_key(&:pop_transaction)
       end
     end
 
@@ -231,9 +226,7 @@ module DataMapper
     def each_adapter(method, on_fail)
       adapters = @adapters
       begin
-        adapters.each_key do |adapter|
-          send(method, adapter)
-        end
+        adapters.each_key { |adapter| send(method, adapter) }
       rescue Exception => exception
         adapters.each_key do |adapter|
           on_fail.each do |fail_handler|
@@ -250,11 +243,9 @@ module DataMapper
 
     # @api private
     def state_for(adapter)
-      unless @adapters.key?(adapter)
+      @adapters.fetch(adapter) do
         raise "Unknown adapter #{adapter}"
       end
-
-      @adapters[adapter]
     end
 
     # @api private
