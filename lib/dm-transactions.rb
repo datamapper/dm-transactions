@@ -74,7 +74,7 @@ module DataMapper
       things.each do |thing|
         case thing
           when DataMapper::Adapters::AbstractAdapter
-            @adapters[thing] = :none
+            @adapters[thing] = :none if thing.respond_to?(:transaction_primitive)
           when DataMapper::Repository
             link(thing.adapter)
           when DataMapper::Model
