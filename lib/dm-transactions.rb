@@ -347,7 +347,7 @@ module DataMapper
       #
       # @return [Adapters::Transaction]
       #   a new Transaction (in state :none) that can be used
-      #   to execute code #with_transaction
+      #   to execute code using #begin, #within and #commit
       #
       # @api public
       def transaction
