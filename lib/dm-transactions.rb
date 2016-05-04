@@ -129,19 +129,13 @@ module DataMapper
         begin
           self.begin
           rval = within { |*block_args| yield(*block_args) }
-        rescue Exception => exception
-          if begin?
-            rollback
-          end
-          raise exception
+          commit
+          complete = true
         ensure
-          unless exception
-            if begin?
-              commit
-            end
-            return rval
-          end
+          rollback unless complete
         end
+
+        rval
       else
         unless begin?
           raise "Illegal state for commit without block: #{state}"
